@@ -1,0 +1,34 @@
+name: Go CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test-lint:
+    name: Lint, Test and Build
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./lab2
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    - name: Run Linter (go vet)
+      run: go vet ./...
+
+    - name: Run Tests (go test)
+      run: go test -v -cover ./...
+
+    - name: Build Project (go build)
+      run: go build -v -o app_binary ./...
